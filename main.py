@@ -1,4 +1,4 @@
-# main.py
+# main.py Greece
 
 import tkinter as tk
 #from gui.tkinter_app import ImageAnalyzeApp

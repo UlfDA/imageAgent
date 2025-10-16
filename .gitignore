@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# Allow directory traversal
+!core/
+!gui/
+!main/
+
+# Allow Python files in those directories
+!core/**/*.py
+!gui/**/*.py
+!main/**/*.py
+
+# Always include .gitignore itself
+!.gitignore
