@@ -1,39 +1,12 @@
-"""""
-
-image_toolkit/
-│
-├── core/
-│   └── image_processor.py       # Core image processing class
-│
-├── gui/
-│   └── tkinter_app.py           # Tkinter interface for testing
-│
-├── config/
-│   └── init.ini                 # Stores selected image path
-│
-├── utils/
-│   └── config_handler.py        # Handles reading/writing ini files
-│
-└── main.py                      # Entry point for GUI
-"""
-
 # main.py
 
 import tkinter as tk
-from gui.tkinter_app import ImageApp
-import os
-from typing import List, Dict, Tuple
-from PIL import Image
-
-from core.image_agent import ImageAgent
-from utils.config_handler import ConfigHandler
-
-# main.py
-
-import tkinter as tk
-from gui.tkinter_app import ImageApp
+#from gui.tkinter_app import ImageAnalyzeApp
+from gui.Tkinter_image_creator import ImageCreatorApp
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = ImageApp(root)
+    #analyze_app = ImageAnalyzeApp(root)
+    creator_app = ImageCreatorApp(root)
+
     root.mainloop()
