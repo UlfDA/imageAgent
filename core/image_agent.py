@@ -1,5 +1,5 @@
 ##############################################################################
-### image_agent.py  Version :Greece 16.10.25xx
+### image_agent.py  Version :Greece 16.10.25xxx
 ##############################################################################
 c_default_customerimage_name = "customerimage"
 c_default_coupleimage_name = "coupleimage"
