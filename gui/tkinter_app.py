@@ -1,5 +1,5 @@
 #######################################
-### Tkinter_app.py  Version Rückbau
+### Tkinter_app.py  Version greece
 #######################################
 
 json_dateiname = "MetadataAI.json"
