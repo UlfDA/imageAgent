@@ -72,7 +72,6 @@ def apply_alpha_mask(grc_path, no_bg_path, output_path):
 
 class AIModelManager:
     def __init__(self):
-
         self.mtcnn = None
         self.yolo_model = None
         self.age_pipeline = None
@@ -227,8 +226,9 @@ class ImageAgent:
         c_annotated_image_width = 400
         photogift_base_names = [
             # 'stp-Sock1','stp-Sock2','stp-Sock3','stp-Sock4','stp-Sock5','stp-Advent','stp-Cushion','stp-Keychain','stp-Mug','stp-Ornament',
-            'WP-ornament', 'WP-cushion', 'WP-mug', 'WP-sock1', 'WP-sock2', 'WP-sock3', 'Christmasornament', 'keychain1', 'minileinwand', 'Bierkrug',
+            'S3-ornament', 'S3-cushion', 'S3-mug', 'S3-sock1', 'S3-sock2', 'S3-sock3', 'Christmasornament', 'keychain1', 'minileinwand',
             'Fotocard', 'Fobofridge', 'Acrylickeychain']
+        ### herausgenommen : 'Bierkrug'
         print("DEBUG:find_faces_started")
         base_dir = os.path.dirname(image_path)
         base_name = os.path.splitext(os.path.basename(image_path))[0]
@@ -344,12 +344,15 @@ class ImageAgent:
             filename_starterpackage = f"{c_default_customerimage_name}_face_{i}_starterpackage.png"
             filepath_starterpackage = os.path.join(self.working_directory, filename_starterpackage)
             photogift = photogift_composer()
-            scenic_list = ['WP-ornament','WP-cushion','WP-mug','WP-sock1','WP-sock2','WP-sock3']
+            scenic_list = ['S3-ornament','S3-cushion','S3-mug','S3-sock1','S3-sock2','S3-sock3']
             fusioniertesBild = photogift.fusion(scenic_list, filepath_starterpackage)
 
             # Use FairFace for  age group and gender
             if age_gender_detect:
-                age_group, age_conf, gender = self. estimate_age_and_gender(crop)
+                type(crop_with_bg)
+                #age_group, age_conf, gender = self.estimate_age_and_gender(crop)
+                age_group, age_conf, gender = self.estimate_age_and_gender(crop_with_bg)
+
             else: print("Info: Erkennung von Alter und Geschlecht wurde deaktiviert und wird ausgelassen.")
 
             x1_scaled = int(x1 * scale_ratio)
@@ -393,6 +396,17 @@ class ImageAgent:
             label = pet["label"].capitalize()
             conf = pet["confidence"]
             crop = image.crop((x1, y1, x2, y2))
+            #crop.show()
+
+            ### oberen Teil herausschneiden da dort der Kopf des Tieres vermuted wird ###
+            # Assume 'crop' is your previously cropped image
+            width, height = crop.size
+            if width < height:
+                square_size = width                 # Use width as the square size
+                crop = crop.crop((0, 0, square_size, square_size))                 # Crop from the top of the image
+            ### Ende des Kopf ausschneidens
+            #crop.show()
+
             fname = f"{c_default_customerimage_name}_animal_{z}.jpg"
             #fname = f"{c_default_customerimage_name}_face_{i}.jpg"
             fpath = os.path.join(self.working_directory, fname)
@@ -406,11 +420,11 @@ class ImageAgent:
                 print("Zeile 413 ",base_name,fpath, filepath_photogift)
                 result = photogift.apply(base_name,fpath, filepath_photogift)
 
-            # Jetzt noch das starterpackage Fotogeschenke Bild im Blister
+            # Jetzt noch das starterpackage Fotogeschenke Bild im Blister für Tiere
             filename_starterpackage = f"{c_default_customerimage_name}_animal_{z}_starterpackage.png"
             filepath_starterpackage = os.path.join(self.working_directory, filename_starterpackage)
             photogift = photogift_composer()
-            scenic_list = ['WP-ornament','WP-cushion','WP-mug','WP-sock1','WP-sock2','WP-sock3']
+            scenic_list = ['S3-ornament','S3-cushion','S3-mug','S3-sock1','S3-sock2','S3-sock3']
             fusioniertesBild = photogift.fusion(scenic_list, filepath_starterpackage)
 
             x1_scaled = int(x1 * scale_ratio)
@@ -611,7 +625,9 @@ class ImageAgent:
     #def run(self, image_paths: List[str]) -> List[Dict]:
     def annotation_tool_run(self, image_paths: List[str],DetectAI,DetectObjects,DetectIntent) -> List[Dict]:
         results = []
+        print("t1")
         for path in image_paths:
+            print("p1")
             metadata = {}
             try: face_data = self.find_faces(path,DetectAI)
             except Exception as e:
@@ -726,11 +742,11 @@ class ImageAgent:
         return age_group, round(age_conf, 2), gender
 
     def detect_animals(self, image_path: str) -> List[Dict]:
-        print("1")
+        #print("1")
 
         results = manager.get_yolo_model().predict(image_path)
 
-        print("2")
+        #print("2")
 
         detections = results[0].boxes.data.cpu().numpy()
         names = results[0].names

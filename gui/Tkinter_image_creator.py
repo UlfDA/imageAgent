@@ -15,14 +15,12 @@ from utils.config_handler import ConfigHandler
 import os
 import re
 from .image_creator import ImageCreator
-print(f"Creator 2: {time.time() - startCreator:.2f} seconds")
 from core.image_agent import ImageAgent     # braucht 11 s
-print(f"Creator 3: {time.time() - startCreator:.2f} seconds")
 import cv2
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-print(f"creator imports: {time.time() - startCreator:.2f} seconds")
+#print(f"creator imports: {time.time() - startCreator:.2f} seconds")
 json_dateiname = "MetadataAI.json"
 default_photogift_thumbnail_size = 170
 default_scalesize = 700
@@ -229,7 +227,7 @@ class ImageCreatorApp:
         # ki_analyse = metadata wie geschlecht, alter erfassen ; 2ter bool: Objekt Analyse, 3ter: Absicht analyse
         results = self.agent.annotation_tool_run(self.selected_paths,ki_analyse,ki_analyse,ki_analyse)
         if not results:
-            messagebox.showinfo("No Faces", "No faces detected in the selected images.")
+            messagebox.showinfo("roblem in go() fuktion ", "annotation_tool_run")
             tk.Label(self.results_label, text="No faces detected.").pack(anchor="w")
             return
         all_objects = set()  # Collect all unique objects across results
@@ -460,7 +458,7 @@ class ImageCreatorApp:
         counter= 0
         for face_data in results.get("faces", []):
             counter = counter +1
-            print("Face loop counter:",counter)
+            # print("Face loop counter:",counter)
             face_frame = tk.Frame(right_column)
             face_frame.pack(fill=tk.X, expand=True, pady=5)
 
@@ -491,7 +489,7 @@ class ImageCreatorApp:
             clahe_path = re.sub(r'_(\d+)(\.jpg)$', r'_black_nobg_clahe\1\2', image_path)
             clahe_path = clahe_path.replace(".jpg", ".png")
 
-            print("image_path_clahe:",clahe_path)
+            # print("image_path_clahe:",clahe_path)
             #aus image_agent :image_path_clahe = f"{c_default_customerimage_name}_face_black_nobg_clahe{i}.png"
 
             #self.show_photogift_in_creator_frame(image_path,'stp-Cushion', 'creator_bierkrug_label')
@@ -533,7 +531,6 @@ class ImageCreatorApp:
             labeltext = f"{label} ({conf:.2f})"
 
     def process_directory_analysis(self):
-
         start_time = time.time()  # ⏱️ Start timer
         counter = 0  # 📊 Initialize counter
         directory = filedialog.askdirectory(title="Select Directory")
